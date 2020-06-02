@@ -6,6 +6,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score,recall_score,f1_score,fbeta_score
 from sklearn.metrics import precision_recall_fscore_support, classification_report
 
+# 标签转换
 def label_type(s):
     it = {"finger":0,"palm":1,"other":2}
     return it[str(s,encoding="utf-8")]
@@ -37,3 +38,5 @@ if __name__ == "__main__":
     labelCol=2                  # 标签列
     modelPath = "test.m"        # 模型存放路径
     svmTrain(dataPath, startFeatureCol, endFeatureCol, labelCol, modelPath)
+    x = 0        # 预测值
+    print(svmPredict(x,modelPath))
