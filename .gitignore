@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# 项目配置文件
+.idea/
+
+# 彩色手势数据集文件夹
+data/Dataset
+data/crHand
