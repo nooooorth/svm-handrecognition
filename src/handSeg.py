@@ -25,7 +25,8 @@ def ycrcbSeg(Img, YCrMinThreshold=135, YCrMaxThreshold=175, YCbMinThreshold=80, 
 if __name__ == "__main__":
     handDataPath = "F:/Project/svm-handrecognition/data/Dataset/9"     # 源图片路径
     crHandPath = "F:/Project/svm-handrecognition/data/crHand/9"        # 存放文件夹路径
-    pic_number = 0
+    pic_number = 0      # 文件重命名起始
+    ## 将原始图像转换为cr图像储存
     for fileName in os.listdir(handDataPath):
         print("读取文件名为：",fileName)
         if(fileName==".DS_Store"):
