@@ -134,3 +134,4 @@ dmypy.json
 # 彩色手势数据集文件夹
 data/Dataset
 data/crHand
+data/txtList
