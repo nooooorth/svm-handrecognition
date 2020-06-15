@@ -6,6 +6,8 @@ from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score,recall_score,f1_score,fbeta_score
 from sklearn.metrics import precision_recall_fscore_support, classification_report
+from handSeg import ycrcbSeg
+from picHu import imgToHu
 
 # SVM训练函数
 # dataPath:数据文件路径（txt/csv）
@@ -13,7 +15,8 @@ from sklearn.metrics import precision_recall_fscore_support, classification_repo
 # modelPath:模型存放路径
 def svmTrain(dataPath, labelCol, modelPath):
     # 训练数据处理
-    data = np.loadtxt(dataPath, dtype=int, delimiter=",")
+    data = np.loadtxt(dataPath, delimiter=",")
+    data = data[~np.isnan(data).any(axis=1)]        # 删除含有缺省值的行
     x, y = np.split(data, (labelCol,), axis=1)
     x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=1, train_size=0.7)   # 训练/测试比7:3
 
@@ -49,11 +52,13 @@ def imgToX(img):
     return img_array
 
 if __name__ == "__main__":
-    # dataPath = "../data/txtList/date.csv"     # 数据文件路径
+    dataPath = "../data/txtList/date.csv"     # 数据文件路径
     modelPath = "../data/model/hand.m"  # 模型存放路径
-    # labelCol= 784                   # 标签列
-    # svmTrain(dataPath, labelCol, modelPath)
+    labelCol= 784                   # 标签列
+    svmTrain(dataPath, labelCol, modelPath)
 
     # predict
-    x = imgToX(cv2.imread("../data/crHand/7/7_15.jpg",0))        # 预测值
+    img = cv2.imread("../data/Dataset/4/IMG_1122.JPG")
+    _,_,img  = ycrcbSeg(img)
+    x = imgToX(img)        # 预测值
     print("Predict:",svmPredict(x,modelPath))
