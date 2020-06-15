@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from handSeg import ycrcbSeg
+from handSeg import ycrcbSeg, handShape
 from svmtrain import imgToX,svmPredict
 
 def video_demo(cameraId):
@@ -19,7 +19,8 @@ def video_demo(cameraId):
 
 if __name__ == "__main__":
     cameraId = 0        # 摄像头ID
-    modelPath = "../data/model/hand.m"  # 模型存放路径
+    modelPath = "../data/model/hand_1.m"  # 模型存放路径
+    modelPath_1 = 'F:/Project/handRecognition/model/hand_model_202005141712.m'
 
     cam = cv2.VideoCapture(cameraId)
 
@@ -38,9 +39,16 @@ if __name__ == "__main__":
         _, crPic, ycrcbHand = ycrcbSeg(frame)       # ycrcb处理
 
         # predict
+        try:
+            handValue = handShape(ycrcbHand)
+        except:
+            print("wrong!")
+            continue
         imgPredict = imgToX(ycrcbHand)
         result = svmPredict(imgPredict, modelPath)
-        print("SVMPicPredict:", result)
+        result_hand = svmPredict(handValue,modelPath_1)
+        # print("SVMPicPredict:", result)
+        print("SVMHandPredict:",result_hand)
 
         frameMerge = np.hstack((frameGray, ycrcbHand))      # 合并窗口
         cv2.imshow("Camera",frameMerge)
