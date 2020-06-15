@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from handSeg import ycrcbSeg
+from svmtrain import imgToX,svmPredict
 
 def video_demo(cameraId):
     cam = cv2.VideoCapture(cameraId)
@@ -16,9 +17,10 @@ def video_demo(cameraId):
             cv2.destroyAllWindows()
             break
 
-
 if __name__ == "__main__":
     cameraId = 0        # 摄像头ID
+    modelPath = "../data/model/hand.m"  # 模型存放路径
+
     cam = cv2.VideoCapture(cameraId)
 
     # 强制视频格式转换，防止YUK格式帧率过低
@@ -34,6 +36,11 @@ if __name__ == "__main__":
         frame = frame[:, ::-1, :]       # 翻转图像
         frameGray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)      # 为合并窗口做准备
         _, crPic, ycrcbHand = ycrcbSeg(frame)       # ycrcb处理
+
+        # predict
+        imgPredict = imgToX(ycrcbHand)
+        result = svmPredict(imgPredict, modelPath)
+        print("SVMPicPredict:", result)
 
         frameMerge = np.hstack((frameGray, ycrcbHand))      # 合并窗口
         cv2.imshow("Camera",frameMerge)
